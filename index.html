@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FastFood Kiosk</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: #f2f2f2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .start-screen {
+      background: #d21f26;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      width: 100%;
+      text-align: center;
+      padding: 2rem;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 10;
+    }
+
+    .start-screen .logo {
+      width: 320px;
+      height: auto;
+      margin-bottom: -6rem;
+    }
+
+    @keyframes welcomeAnimation {
+      0% {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      50% {
+        opacity: 1;
+        transform: translateY(10px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .start-screen h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      animation: welcomeAnimation 1.5s ease-out forwards;
+      animation-fill-mode: forwards;
+    }
+
+    .start-screen p {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: welcomeAnimation 2s ease-out forwards;
+      animation-delay: 0.5s;
+      animation-fill-mode: forwards;
+    }
+
+    .start-btn {
+      padding: 1rem 2rem;
+      background: #ffc107;
+      color: #000;
+      border: none;
+      border-radius: 30px;
+      font-size: 1.3rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.3s;
+      opacity: 0;
+      animation: welcomeAnimation 2s ease-out forwards;
+      animation-delay: 1s;
+      animation-fill-mode: forwards;
+    }
+
+    .start-btn:hover {
+      background: #ffca28;
+      transform: scale(1.05);
+    }
+
+    .kiosk {
+  width: 100%;
+  max-width: 420px;
+  height: 100vh;
+  background: white;
+  border-radius: 0;
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+
+    .header {
+      background: #d21f26;
+      color: white;
+      padding: 1.2rem;
+      text-align: center;
+    }
+    .header-logo {
+  max-height: 70px;
+  width: auto;
+  object-fit: contain;
+}
+
+
+    .categories {
+      display: flex;
+      justify-content: space-around;
+      background: #fff3f3;
+      padding: 1rem 0;
+    }
+
+    .categories button {
+      background: #d21f26;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+
+    .menu {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      padding: 1rem;
+      overflow-y: auto;
+      flex: 1;
+    
+    }
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+    .menu {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+}
+
+
+    .item {
+      background: #f7f7f7;
+      border-radius: 10px;
+      text-align: center;
+      padding: 1rem;
+      transition: transform 0.2s;
+    }
+
+    .item:hover {
+      transform: scale(1.05);
+    }
+
+    .item img {
+      width: 80px;
+      height: 80px;
+    }
+
+    .item button {
+      margin-top: 0.5rem;
+      padding: 0.4rem 0.8rem;
+      border: none;
+      background: #ffc107;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .summary {
+      padding: 1rem;
+      border-top: 1px solid #ccc;
+    }
+
+    .total {
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-top: 0.5rem;
+    }
+
+    .checkout-btn {
+      width: 100%;
+      padding: 1rem;
+      background: #ffc107;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 1.1rem;
+    }
+
+    .payment-section {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .payment-methods {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .payment-method button {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.8rem 1.2rem;
+      border: 2px solid #ccc;
+      background: #fff;
+      color: #333;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .payment-method button:hover {
+      border-color: #ffc107;
+      color: #000;
+    }
+
+    .receipt {
+      display: none;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .review {
+      display: none;
+      padding: 1rem;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .review button {
+      padding: 0.8rem 1.5rem;
+      border: none;
+      background: #ffc107;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .review .back-btn {
+      background: #ccc;
+    }
+
+    .payment-instructions {
+      display: none;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .payment-instructions button {
+      padding: 0.8rem 1.5rem;
+      background: #d21f26;
+      color: white;
+      font-weight: bold;
+      font-size: 1rem;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Landing Page -->
+  <div class="start-screen" id="startScreen">
+    <img src="Lamii-removebg-preview.png" alt="FastFood Logo" class="logo" />
+    <h1>Welcome to Lami kayko</h1>
+    <p>Tap below to start your order</p>
+    <button onclick="startOrder()" class="start-btn">Start Order</button>
+  </div>
+
+  <!-- Kiosk App -->
+  <div class="kiosk" id="kiosk">
+    <div class="header">
+      <img src="Lamii-removebg-preview.png" alt="LAMI KAYKO" class="header-logo" />
+    </div>
+    
+
+    <div class="categories">
+      <button onclick="showCategory('meals')">Meals</button>
+      <button onclick="showCategory('drinks')">Drinks</button>
+      <button onclick="showCategory('desserts')">Desserts</button>
+    </div>
+
+    <div class="menu" id="menu"></div>
+
+    <div class="summary">
+      <p id="orderList"></p>
+      <p class="total">Total: ₱<span id="totalPrice">0</span>.00</p>
+      <button class="checkout-btn" onclick="goToReview()">Proceed to Checkout</button>
+    </div>
+
+    <div class="review" id="review">
+      <h2 style="text-align: center; margin-bottom: 1rem;">Your Order</h2>
+      <ul id="reviewList" style="list-style: none; padding: 0;"></ul>
+      <p class="total" style="text-align: center;">Total: ₱<span id="reviewTotal">0</span>.00</p>
+      <div style="display: flex; justify-content: space-around; margin-top: 1rem;">
+        <button class="back-btn" onclick="goBack()">Go Back</button>
+        <button onclick="goToPaymentInstructions()">Proceed to Payment</button>
+      </div>
+    </div>
+
+    <div class="payment-instructions" id="paymentInstructions">
+      <h2>To make the Payment of ₱<span id="paymentAmount">0</span>.00,</h2>
+      <p>Please proceed to the Counter.</p>
+      <button onclick="goToPayment()">Proceed</button>
+    </div>
+
+    <div class="payment-section" id="payment">
+      <h2>Choose Payment Method</h2>
+      <div class="payment-methods">
+        <div class="payment-method">
+          <button onclick="completeOrder('GCash')">
+            <img src="gcash-removebg-preview.png" alt="GCash" width="24" height="24"/>
+            GCash
+          </button>
+        </div>
+        <div class="payment-method">
+          <button onclick="completeOrder('Bank')">
+            <img src="bank-removebg-preview.png" alt="Bank" width="24" height="24"/>
+            Bank
+          </button>
+        </div>
+        <div class="payment-method">
+          <button onclick="completeOrder('Cash')">
+            <img src="cash-removebg-preview.png" alt="Cash" width="24" height="24"/>
+            Cash
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="receipt" id="receipt">
+      <h2>Thank you for the payment!</h2>
+      <p>Your order number is:</p>
+      <p id="orderNumber" style="font-size: 2.5rem; color: #ffc107; font-weight: bold; margin: 0.5rem 0;"></p>
+      <p style="margin-top: 1rem;">🧾 Collect your receipt and wait for your number to be called out.</p>
+      <p id="receiptDetails" style="margin: 1rem 0;"></p>
+      <button onclick="exitKiosk()" style="padding: 0.8rem 1.5rem; background: #d21f26; color: white; border: none; border-radius: 10px; font-weight: bold; font-size: 1rem; cursor: pointer;">Exit</button>
+    </div>
+  </div>
+
+  <script>
+    const menu = document.getElementById('menu');
+    const orderList = document.getElementById('orderList');
+    const totalPrice = document.getElementById('totalPrice');
+    const paymentSection = document.getElementById('payment');
+    const receipt = document.getElementById('receipt');
+    const receiptDetails = document.getElementById('receiptDetails');
+    const review = document.getElementById('review');
+    const reviewList = document.getElementById('reviewList');
+    const reviewTotal = document.getElementById('reviewTotal');
+    const paymentInstructions = document.getElementById('paymentInstructions');
+    const paymentAmount = document.getElementById('paymentAmount');
+    const kiosk = document.getElementById('kiosk');
+    const startScreen = document.getElementById('startScreen');
+    const orderNumber = document.getElementById('orderNumber');
+
+    const items = {
+  meals: [
+    { name: 'Burger Meal', price: 99, img: 'burger1.png' },
+    { name: 'Chicken Meal', price: 120, img: 'chicken .png' },
+  ],
+  drinks: [
+    { name: 'Softdrink', price: 35, img: 'soft-drinks.png' },
+    { name: 'Iced Tea', price: 30, img: 'Icetea.png' },
+  ],
+  desserts: [
+    { name: 'Sundae', price: 45, img: 'sundae.png' },
+    { name: 'Apple Pie', price: 40, img: 'applepie.png' },
+  ]
+};
+
+
+
+    let cart = [];
+
+    function startOrder() {
+      startScreen.style.display = 'none';
+      kiosk.style.display = 'flex';
+      showCategory('meals');
+    }
+
+    function showCategory(cat) {
+      menu.innerHTML = '';
+      items[cat].forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.innerHTML = `
+          <img src="${item.img}" />
+          <p>${item.name}</p>
+          <p>₱${item.price}</p>
+          <button onclick='addToCartFromButton(event, ${JSON.stringify(item)})'>Add to Cart</button>
+        `;
+        menu.appendChild(div);
+      });
+    }
+
+    function addToCartFromButton(event, item) {
+      event.stopPropagation();
+      addToCart(item);
+    }
+
+    function addToCart(item) {
+      cart.push(item);
+      updateSummary();
+    }
+
+    function updateSummary() {
+      orderList.innerHTML = cart.map(i => i.name).join(', ');
+      totalPrice.innerText = cart.reduce((sum, i) => sum + i.price, 0);
+    }
+
+    function goToReview() {
+      document.querySelector('.menu').style.display = 'none';
+      document.querySelector('.categories').style.display = 'none';
+      document.querySelector('.summary').style.display = 'none';
+
+      reviewList.innerHTML = '';
+      cart.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = `${item.name} - ₱${item.price}`;
+        li.style.margin = '5px 0';
+        reviewList.appendChild(li);
+      });
+
+      reviewTotal.textContent = cart.reduce((sum, i) => sum + i.price, 0);
+      review.style.display = 'block';
+    }
+
+    function goBack() {
+      review.style.display = 'none';
+      document.querySelector('.menu').style.display = 'grid';
+      document.querySelector('.categories').style.display = 'flex';
+      document.querySelector('.summary').style.display = 'block';
+    }
+
+    function goToPaymentInstructions() {
+      review.style.display = 'none';
+      paymentInstructions.style.display = 'block';
+      paymentAmount.textContent = cart.reduce((sum, i) => sum + i.price, 0);
+    }
+
+    function goToPayment() {
+      paymentInstructions.style.display = 'none';
+      paymentSection.style.display = 'flex';
+    }
+
+    function completeOrder(method) {
+      const randomOrderNum = Math.floor(1000 + Math.random() * 9000);
+      orderNumber.textContent = randomOrderNum;
+      receiptDetails.innerHTML = `Paid via ${method}.<br>Total: ₱${cart.reduce((sum, i) => sum + i.price, 0)}.00`;
+
+      paymentSection.style.display = 'none';
+      receipt.style.display = 'block';
+    }
+
+    function exitKiosk() {
+      location.reload();
+    }
+  </script>
+
+</body>
+</html>
